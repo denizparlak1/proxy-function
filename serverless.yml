@@ -1,0 +1,44 @@
+# Welcome to serverless. Read the docs
+# https://serverless.com/framework/docs/
+
+# Serverless.yml is the configuration the CLI
+# uses to deploy your code to your provider of choice
+
+service: proxy-function
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: beta
+  cfLogs: true
+  region: ${opt:region, 'eu-central-1'}
+  memorySize: 256
+  timeout: 30
+  versionFunctions: true
+  profile: statustick
+
+functions:
+  check:
+    handler: src/handler.check
+    events:
+      - http:
+          path: check
+          method: get
+          cors: true
+  verify:
+    handler: src/handler.verify
+    events:
+      - http:
+          path: verify
+          method: post
+          cors: true
+  idVerify:
+    handler: src/handler.idVerify
+    events:
+      - http:
+          path: id-verify
+          method: post
+          cors: true
+
+plugins:
+  - serverless-offline
